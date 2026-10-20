@@ -436,11 +436,15 @@ class MainActivity : Activity() {
                 }
                 while (System.currentTimeMillis() < deadline) {
                     Thread.sleep(interval * 1000L)
-                    val (_, r) = http(
-                        "POST", "https://github.com/login/oauth/access_token",
-                        "client_id=$CLIENT_ID&device_code=$dev&grant_type=urn:ietf:params:oauth:grant-type:device_code",
-                        form = true
-                    )
+                    val r = try {
+                        http(
+                            "POST", "https://github.com/login/oauth/access_token",
+                            "client_id=$CLIENT_ID&device_code=$dev&grant_type=urn:ietf:params:oauth:grant-type:device_code",
+                            form = true
+                        ).second
+                    } catch (e: java.io.IOException) {
+                        continue // mạng rớt tạm thời → thử lại ở lần poll sau
+                    }
                     val rj = JSONObject(r)
                     if (rj.has("access_token")) {
                         token = rj.getString("access_token")
