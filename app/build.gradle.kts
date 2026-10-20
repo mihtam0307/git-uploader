@@ -10,7 +10,7 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "com.mihtam.uploader"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = vc
         versionName = "1.0.$vc"
